@@ -102,14 +102,14 @@ def create_trading_scenario_agent(language: str = "ko"):
         - Portfolio average return
 
         ### 2. Stock Evaluation (1~10 points)
-        - **8~10 points**: Active entry (undervalued vs peers + strong momentum)
-        - **7 points**: Entry (basic conditions met)
-        - **6 points**: Conditional entry (bull market + momentum confirmed)
-        - **5 points or less**: No entry (clear negative factors exist)
+        - **8~10 points**: Active entry
+        - **7 points**: Entry
+        - **6 points**: Conditional entry
+        - **5 points or less**: No entry
 
-        ### 3. Entry Decision Required Checks
+        ## Entry Decision Guide
 
-        #### 3-1. Valuation Analysis (Top Priority)
+        ### 3-1. Valuation Analysis (Top Priority)
         Use perplexity-ask tool to check:
         - "[Stock name] PER PBR vs [Industry] average valuation comparison"
         - "[Stock name] vs major competitors valuation comparison"
@@ -148,11 +148,15 @@ def create_trading_scenario_agent(language: str = "ko"):
         - decision: "No Entry" + clear reason (loss too wide, overheated, etc.)
 
         #### 3-2.2. Basic Checklist
-        - Financial health (debt ratio, cash flow)
-        - Growth drivers (clear and sustainable growth basis)
-        - Industry outlook (positive industry-wide outlook)
-        - Technical signals (momentum, support, downside risk from current position)
-        - Individual issues (recent positive/negative news)
+        - **Financial health**: Refer to '2-1. Financial Analysis' (Comprehensive judgment of debt ratio, ROE/ROA, cash flow, operating margin)
+        - **Growth drivers**: Refer to '2-2. Company Overview' (Business structure, R&D investment, competitiveness)
+        - **Industry outlook**: Refer to '4. Market Analysis' (Positive/negative outlook for the sector)
+        - **Technical signals**: Refer to '1-1. Technical Analysis' (Momentum, support, current position in box)
+        - **Material Validity (CRITICAL)** ⭐: Refer to '3. Recent Major News Summary'
+          * What is the material (news) causing the current rise/interest?
+          * Is the material still valid? (One-time event vs. continuous momentum)
+          * What is the impact on stock price when the material expires?
+        - **Individual issues**: Refer to '5. Strategy & Opinion' (Risk factors, positive/negative news)
 
         #### 3-3. Portfolio Constraints
         - 7+ holdings → Consider only 8+ points
@@ -394,10 +398,10 @@ def create_trading_scenario_agent(language: str = "ko"):
         - 포트폴리오 평균 수익률
 
         ### 2. 종목 평가 (1~10점)
-        - **8~10점**: 적극 진입 (동종업계 대비 저평가 + 강한 모멘텀)
-        - **7점**: 진입 (기본 조건 충족)
-        - **6점**: 조건부 진입 (강세장 + 모멘텀 확인 시 진입)
-        - **5점 이하**: 미진입 (명확한 부정적 요소 존재)
+        - **8~10점**: 적극 진입
+        - **7점**: 진입
+        - **6점**: 조건부 진입
+        - **5점 이하**: 미진입
 
         ## 진입 결정 가이드
 
@@ -443,11 +447,11 @@ def create_trading_scenario_agent(language: str = "ko"):
         - decision: "미진입" + 미진입 이유 (손실폭 과다, 과열, 지지선 이탈 우려 등)
 
         #### 3-2.2. 기본 체크리스트 (보고서 참고)
-        - 재무 건전성: 보고서 '2-1. 기업 현황 분석' 참고 (부채비율, ROE/ROA, 현금흐름, 영업이익률 종합 판단)
-        - 성장 동력: 보고서 '2-2. 기업 개요 분석' 참고 (사업 구조, R&D 투자, 경쟁력)
-        - 업계 전망: 보고서 '4. 시장 분석' 참고 (업종 전반의 긍정/부정적 전망)
-        - 기술적 신호: 보고서 '1-1. 주가 및 거래량 분석' 참고 (상승 모멘텀, 지지선, 박스권 내 현재 위치)
-        - 재료 유효성 (중요): 보고서 '3. 최근 주요 뉴스 요약' 참고
+        - **재무 건전성**: 보고서 '2-1. 기업 현황 분석' 참고 (부채비율, ROE/ROA, 현금흐름, 영업이익률 종합 판단)
+        - **성장 동력**: 보고서 '2-2. 기업 개요 분석' 참고 (사업 구조, R&D 투자, 경쟁력)
+        - **업계 전망**: 보고서 '4. 시장 분석' 참고 (업종 전반의 긍정/부정적 전망)
+        - **기술적 신호**: 보고서 '1-1. 주가 및 거래량 분석' 참고 (상승 모멘텀, 지지선, 박스권 내 현재 위치)
+        - **재료 유효성 (중요)** ⭐: 보고서 '3. 최근 주요 뉴스 요약' 참고
           * 현재 상승/관심의 원인이 되는 재료(뉴스)가 무엇인가?
           * 해당 재료가 아직 유효한가? (일회성 이벤트 vs 지속적 모멘텀)
           * 재료 소멸 시 주가에 미칠 영향은?
@@ -915,42 +919,4 @@ def create_sell_decision_agent(language: str = "ko"):
         - 단순 단기 변동이나 노이즈로 인한 조정은 지양
         - 펀더멘털 변화, 시장 구조 변화 등 명확한 근거가 있을 때만 조정
 
-        **중요**: 반드시 도구를 활용하여 최신 데이터를 확인한 후 종합적으로 판단하세요.
-
-        ### 응답 형식
-
-        JSON 형식으로 다음과 같이 응답해주세요:
-        {
-            "should_sell": true 또는 false,
-            "sell_reason": "매도 이유 상세 설명",
-            "confidence": 1~10 사이의 확신도,
-            "analysis_summary": {
-                "technical_trend": "상승/하락/중립 + 강도",
-                "volume_analysis": "거래량 패턴 분석",
-                "market_condition_impact": "시장 환경이 결정에 미친 영향",
-                "time_factor": "보유 기간 관련 고려사항"
-            },
-            "portfolio_adjustment": {
-                "needed": true 또는 false,
-                "reason": "조정이 필요한 구체적 이유 (매우 신중하게 판단)",
-                "new_target_price": 85000 (숫자, 쉼표 없이) 또는 null,
-                "new_stop_loss": 70000 (숫자, 쉼표 없이) 또는 null,
-                "urgency": "high/medium/low - 조정의 긴급도"
-            }
-        }
-
-        **portfolio_adjustment 작성 가이드:**
-        - **매우 신중하게 판단**: 잦은 조정은 투자 원칙을 해치므로 정말 필요할 때만
-        - needed=true 조건: 시장 환경 급변, 종목 펀더멘털 변화, 기술적 구조 변화 등
-        - new_target_price: 조정이 필요하면 85000 (순수 숫자, 쉼표 없이), 아니면 null
-        - new_stop_loss: 조정이 필요하면 70000 (순수 숫자, 쉼표 없이), 아니면 null
-        - urgency: high(즉시), medium(며칠 내), low(참고용)
-        - **원칙**: 현재 전략이 여전히 유효하다면 needed=false로 설정
-        - **숫자 형식 주의**: 85000 (O), "85,000" (X), "85000원" (X)
-        """
-
-    return Agent(
-        name="sell_decision_agent",
-        instruction=instruction,
-        server_names=["kospi_kosdaq", "sqlite", "time"]
-    )
+        **중요**: 반드시 도구를 활용하여 최신 데이터를 확인한 후 종합�

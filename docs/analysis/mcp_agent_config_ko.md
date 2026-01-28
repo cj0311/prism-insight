@@ -1,4 +1,4 @@
-﻿# mcp_agent.config.yaml 항목별 분석 (AI 관련 포함)
+﻿﻿# mcp_agent.config.yaml 항목별 분석 (AI 관련 포함)
 
 본 문서는 저장소에 실제 `mcp_agent.config.yaml`이 없고, `mcp_agent.config.yaml.example`만 존재하는 상태를 기준으로 작성했습니다.
 
@@ -74,13 +74,13 @@ LLM이 외부 도구를 호출할 때 연결되는 서버 정의입니다.
 - **AI 영향**: 매매 판단 시 “장중/장마감” 구분에 사용
 
 ## `openai` (AI 모델 설정)
-### 10) `openai.default_model: gpt-5.1`
+### 10) `openai.default_model: gpt-5.2`
 - **의미**: OpenAI 기본 모델 지정
-- **효과**: LLM 호출 시 기본 모델이 gpt-5.1로 설정
+- **효과**: LLM 호출 시 기본 모델이 gpt-5.2로 설정 (v1.14.0 업그레이드 반영)
 
 ### 11) `openai.reasoning_effort: high`
 - **의미**: 추론 강도 설정(높음)
-- **효과**: LLM 응답 품질/비용/속도에 영향 가능
+- **효과**: 복잡한 매매 시나리오 분석을 위해 높은 추론 강도 적용
 
 > 주의: 실제 API 키는 이 파일이 아니라 `mcp_agent.secrets.yaml`에 둠.
 
