@@ -6,23 +6,21 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useLanguage } from "@/components/language-provider"
-import type { Holding } from "@/types/dashboard"
+import { formatCurrency as formatCurrencyUtil } from "@/lib/currency"
+import type { Holding, Market } from "@/types/dashboard"
 
 interface StockDetailModalProps {
   stock: Holding
   onClose: () => void
   isRealTrading?: boolean
+  market?: Market
 }
 
-export function StockDetailModal({ stock, onClose, isRealTrading = false }: StockDetailModalProps) {
+export function StockDetailModal({ stock, onClose, isRealTrading = false, market = "KR" }: StockDetailModalProps) {
   const { t, language } = useLanguage()
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("ko-KR", {
-      style: "currency",
-      currency: "KRW",
-      maximumFractionDigits: 0,
-    }).format(value ?? 0)
+    return formatCurrencyUtil(value ?? 0, market, language as "ko" | "en")
   }
 
   const formatPercent = (value: number) => {
@@ -200,13 +198,25 @@ export function StockDetailModal({ stock, onClose, isRealTrading = false }: Stoc
                 {scenario.decision && (
                   <div className="p-4 rounded-lg bg-primary/10 border border-primary/20">
                     <div className="flex items-center justify-between mb-2">
-                      <p className="text-sm font-semibold text-primary">{t("modal.buyDecision")}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-semibold text-primary">{t("modal.buyDecision")}</p>
+                        {scenario.entry_checklist_passed !== undefined && (
+                          <span className="text-xs text-muted-foreground">
+                            ({t("watchlist.entryChecklist")}: {scenario.entry_checklist_passed}/6)
+                          </span>
+                        )}
+                      </div>
                       <Badge variant={scenario.decision === t("watchlist.entry") ? "default" : "secondary"}>
                         {scenario.decision}
                       </Badge>
                     </div>
                     {scenario.rationale && (
                       <p className="text-sm text-muted-foreground leading-relaxed">{scenario.rationale}</p>
+                    )}
+                    {scenario.rejection_reason && scenario.decision !== t("watchlist.entry") && (
+                      <p className="text-xs text-amber-600 dark:text-amber-400 mt-2 pt-2 border-t border-primary/20">
+                        {t("watchlist.rejectionReason")}: {scenario.rejection_reason}
+                      </p>
                     )}
                   </div>
                 )}

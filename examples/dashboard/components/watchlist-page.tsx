@@ -7,23 +7,21 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Eye, AlertCircle, TrendingUp, Target, Brain, BarChart3, Filter, ChevronDown, ChevronUp, FileJson } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
-import type { WatchlistStock } from "@/types/dashboard"
+import { formatCurrency as formatCurrencyUtil } from "@/lib/currency"
+import type { WatchlistStock, Market } from "@/types/dashboard"
 
 interface WatchlistPageProps {
   watchlist: WatchlistStock[]
+  market?: Market
 }
 
-export function WatchlistPage({ watchlist }: WatchlistPageProps) {
+export function WatchlistPage({ watchlist, market = "KR" }: WatchlistPageProps) {
   const { t, language } = useLanguage()
   const [expandedStocks, setExpandedStocks] = useState<Set<number>>(new Set())
   const [selectedScenario, setSelectedScenario] = useState<any>(null)
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("ko-KR", {
-      style: "currency",
-      currency: "KRW",
-      maximumFractionDigits: 0,
-    }).format(value)
+    return formatCurrencyUtil(value, market, language as "ko" | "en")
   }
 
   const formatDate = (dateString: string) => {
@@ -290,8 +288,18 @@ export function WatchlistPage({ watchlist }: WatchlistPageProps) {
                                   stock.decision === t("watchlist.entry") ? "text-success" : "text-amber-600 dark:text-amber-400"
                                 }`}>
                                   {t("watchlist.decision")}: {stock.decision}
+                                  {stock.scenario?.entry_checklist_passed !== undefined && (
+                                    <span className="ml-2 text-xs text-muted-foreground">
+                                      ({t("watchlist.entryChecklist")}: {stock.scenario.entry_checklist_passed}/6)
+                                    </span>
+                                  )}
                                 </p>
                                 <p className="text-sm text-foreground leading-relaxed">{stock.skip_reason}</p>
+                                {stock.scenario?.rejection_reason && stock.decision !== t("watchlist.entry") && (
+                                  <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                                    {t("watchlist.rejectionReason")}: {stock.scenario.rejection_reason}
+                                  </p>
+                                )}
                               </div>
                             </div>
                           </div>
