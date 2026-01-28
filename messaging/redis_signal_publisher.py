@@ -31,6 +31,7 @@ try:
     env_path = project_root / ".env"
     if env_path.exists():
         load_dotenv(env_path)
+        load_dotenv(env_path, override=True) # override=True to ensure .env values take precedence
 except ImportError:
     pass  # If dotenv is not available, read from environment variables directly
 

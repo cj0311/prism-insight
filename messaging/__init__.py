@@ -2,6 +2,7 @@
 PRISM-INSIGHT Messaging Module
 
 Redis Streams 기반 트레이딩 시그널 발행 모듈입니다.
+Redis Streams 기반 트레이딩 시그널 발행 모듈입니다. (Redis Streams, GCP Pub/Sub)
 """
 from messaging.redis_signal_publisher import (
     SignalPublisher,

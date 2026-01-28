@@ -32,6 +32,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 # .env 파일 로드
 from dotenv import load_dotenv
 load_dotenv(PROJECT_ROOT / ".env")
+load_dotenv(PROJECT_ROOT / ".env", override=True) # override=True to ensure .env values take precedence
 
 from messaging.redis_signal_publisher import (
     SignalPublisher,
